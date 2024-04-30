@@ -1,0 +1,35 @@
+name: with-pr
+
+on:
+  pull_request:
+    types:
+      - opened
+
+jobs:
+  with-pull-request:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Configure Git
+        run: |
+          git config --global user.name "github-actions"
+          git config --global user.email actions@github.com
+
+      - name: Checkout the Pull Request in repository
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh pr checkout ${{ github.event.pull_request.number }}
+
+      - name: Show the Pull Request event
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          echo "head:sha"
+          echo  ${{ github.event.pull_request.head.sha }}
+          echo "head:ref"
+          echo  ${{ github.event.pull_request.head.ref }}
+          echo "base:sha"
+          echo  ${{ github.event.pull_request.base.sha }}
+          echo "base:ref"
+          echo  ${{ github.event.pull_request.base.ref }}
